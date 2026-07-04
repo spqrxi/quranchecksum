@@ -53,18 +53,29 @@ def main():
 
     missing = set(known) - {f"{s}:{a}" for s, a, _ in verses}
 
+    kind = manifest.get("meta", {}).get("kind", "text")
+    root_key = "quran" if kind == "text" else "translation_root"
+    root_hash = manifest.get(root_key)
+    source_label = manifest["meta"].get("source") or manifest["meta"].get("translation_id", "unknown")
+
     print(f"Checked {checked} verses against manifest "
-          f"({manifest['meta']['verse_count']} expected, "
-          f"source: {manifest['meta']['source']})")
+          f"({manifest['meta'].get('verse_count')} expected, "
+          f"source: {source_label})")
 
     if not failures and not missing:
-        print(f"PASS — all verses match. Quran root hash: {manifest['quran']}")
+        if kind == "text":
+            print(f"PASS — all verses match. Quran root hash: {root_hash}")
+        else:
+            print(f"PASS — all verses match. Translation root hash: {root_hash}")
+            print("Reminder: a translation manifest match confirms byte-identity "
+                  "with one distributor's copy at one date -- it is not a claim "
+                  "of correctness or canonicity. See docs/SPEC.md.")
         sys.exit(0)
 
     if failures:
         print(f"\nFAILED — {len(failures)} verse(s) do not match:")
-        for key, kind, expected, got in failures:
-            if kind == "NOT_IN_MANIFEST":
+        for key, failure_kind, expected, got in failures:
+            if failure_kind == "NOT_IN_MANIFEST":
                 print(f"  {key}: not found in manifest (unexpected verse key)")
             else:
                 print(f"  {key}: hash mismatch")

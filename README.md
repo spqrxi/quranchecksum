@@ -56,6 +56,30 @@ exact verse keys and both hashes, so you can locate the problem immediately.
 python3 scripts/generate_manifest.py your-quran-text.txt --out manifest/new.manifest.json
 ```
 
+## Translations
+
+Translation manifests live under `manifest/translations/` (e.g.
+`manifest/translations/en.sahih.tanzil.manifest.json`). They use the exact
+same hashing scheme as the Arabic text manifest, with two differences:
+
+- They are **hash-only** — no translation text is ever stored in this
+  repository, since translations (unlike the Quran's Arabic text) are
+  copyrighted. See [`docs/PROVENANCE.md`](docs/PROVENANCE.md#translations).
+- They are **non-canonical** — a match confirms your copy is byte-identical
+  to one named distributor's copy at one retrieval date, not that the
+  translation itself is correct or official. See
+  [`docs/SPEC.md`](docs/SPEC.md#translation-manifests).
+
+```bash
+# Generate a translation manifest
+python3 scripts/generate_manifest.py your-translation.txt \
+  --kind translation --meta-file en-sahih-meta.json \
+  --out manifest/translations/en.sahih.tanzil.manifest.json
+
+# Regenerate the translations catalog after adding/updating manifests
+python3 scripts/build_index.py
+```
+
 ## Input format
 
 Tanzil-style pipe-delimited text, one verse per line:
@@ -72,7 +96,9 @@ for the most common source.
 
 ```
 manifest/quran-uthmani.manifest.json   the published manifest (generate this yourself, verify it matches)
-scripts/generate_manifest.py           build a manifest from a source text file
+manifest/translations/                 translation manifests + index.json catalog (hash-only, non-canonical)
+scripts/generate_manifest.py           build a manifest from a source text file (Arabic text or translation)
+scripts/build_index.py                 regenerate manifest/translations/index.json
 scripts/verify.py                      check a source text file against a manifest
 docs/SPEC.md                           normalization rules, what a hash match/mismatch means
 docs/USE_CASES.md                      worked examples: build check, OCR check, tamper detection

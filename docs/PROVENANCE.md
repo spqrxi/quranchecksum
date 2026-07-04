@@ -78,3 +78,62 @@ A genuinely KFGQPC-rooted manifest would require either:
 
 This repo will be updated if KFGQPC publishes a machine-readable text
 source directly.
+
+## Translations
+
+Translation manifests make a categorically weaker claim than the Arabic
+text manifest, and that difference is load-bearing.
+
+### No canonical source
+
+The Arabic text has a clear reference point: KFGQPC's Madinah Mushaf, via
+Tanzil's verified transcription. **No translation has an equivalent single
+ground truth.** A given translation (e.g. Saheeh International) exists
+across multiple publisher editions that are revised over time, and no
+authority certifies one edition as definitively "the" text the way KFGQPC
+functions for the Arabic. A translation manifest in this repo therefore
+pins one narrow, honest claim: **"this is distributor D's copy of
+translation T, as retrieved on date Y"** — not "this is the correct or
+official text of this translation."
+
+### Distributor matters
+
+Tanzil and QuranEnc can both distribute "the same" translation and still
+differ — in footnote handling, minor wording corrections, or formatting
+conventions — even when both are legitimate, good-faith copies. That's why
+`distributor` is a first-class field embedded directly in every
+translation manifest's filename, not just a metadata note: two manifests
+for the same `translation_id` but different `distributor` are expected to
+potentially have different hashes, and that difference is not a defect in
+either.
+
+### Copyright and the hash-only framing
+
+Unlike the Quran's Arabic text, translations are **copyrighted works**
+belonging to their translators/publishers. This repository's approach:
+**publish only SHA-256 hashes, never the translation text itself.**
+
+A SHA-256 hash is a one-way digest — it does not permit reconstruction of
+the original text, so publishing per-verse hashes is not republishing or
+redistributing the copyrighted translation. This framing is sound, with
+four caveats worth stating plainly:
+
+1. **Not legal advice.** This is a defensive engineering practice, not a
+   legal opinion. If you plan to redistribute anything beyond the hashes
+   themselves, consult the specific translation's own license/terms first.
+2. **Never commit real translation text into this repository** — including
+   in test fixtures. Even a handful of real verses used as a "sample" in a
+   test file would itself be a redistribution of copyrighted text. Tests
+   in this repo use synthetic/dummy verse strings, never actual
+   translation content.
+3. **Don't publish anything beyond the plain per-verse SHA-256 hash** —
+   no verse lengths, no n-gram or partial hashes, nothing that could aid
+   reconstructing the underlying text. Keep the manifest to exactly what's
+   specified in `docs/SPEC.md`.
+4. **Retrieval-time terms of service are a separate obligation from
+   publishing hashes.** Fetching a translation's text from a distributor
+   (to compute hashes from) may itself be subject to that distributor's
+   terms of service. That obligation belongs to whoever retrieves and
+   hashes the text (i.e. the maintainer generating a given manifest), not
+   to downstream users who only ever consume the published hashes to run
+   `verify.py` against their own already-obtained copy.

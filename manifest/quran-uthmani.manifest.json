@@ -1,6 +1,7 @@
 {
   "meta": {
     "format_version": "1.0",
+    "kind": "text",
     "source": "tanzil-uthmani",
     "orthographic_standard": "Madinah Mushaf (King Fahd Glorious Qur'an Printing Complex, Medina)",
     "provenance_note": "Text is Tanzil Project's Uthmani digital transcription, verified by Tanzil against the Madinah Mushaf using manual verse checksums during their text preparation process. This is not a direct machine-readable export from KFGQPC itself -- KFGQPC's own official digital outputs are vector page images and Unicode-compliant fonts (see dm.qurancomplex.gov.sa and fonts.qurancomplex.gov.sa), not a plain-text corpus. See docs/PROVENANCE.md.",
