@@ -1,5 +1,7 @@
 # quran-verify
 
+![Qur'an Checksum](assets/banner.png)
+
 Verse-level SHA-256 integrity manifest for the Quran (Uthmani script, Ḥafṣ
 ʿan ʿĀṣim), plus scripts to generate and check it.
 
